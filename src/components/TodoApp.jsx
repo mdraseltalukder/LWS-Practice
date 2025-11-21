@@ -1,37 +1,41 @@
-import { useState } from "react";
+import { useReducer, useState } from "react";
 import AddTask from "./AddTask";
 import TaskList from "./TaskList";
 import { initialTasks } from "../data/taskData,js";
+import { useTaskReducer } from "../../reducers/useTaskReducer";
 
 export default function TodoApp() {
-  const [tasks, setTasks] = useState(initialTasks);
+  const [tasks, dispatch] = useReducer(useTaskReducer, initialTasks);
 
   const getNextId = (tasks) => {
     let nextId = tasks.reduce((prev, current) =>
       prev && prev.id > current.id ? prev.id : current.id
     );
 
-    return nextId++;
+    return nextId + 1;
   };
 
   const handleAddTask = (text) => {
     if (!text.trim()) return;
-    setTasks([
-      ...tasks,
-      {
-        id: getNextId(tasks),
-        text,
-        done: false,
-      },
-    ]);
+    dispatch({
+      type: "add",
+      text,
+      id: getNextId(tasks),
+    });
   };
 
   const handleDelete = (taskId) => {
-    setTasks(tasks.filter((task) => taskId !== task.id));
+    dispatch({
+      type: "delete",
+      taskId,
+    });
   };
 
   const handleChangeTask = (task) => {
-    setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
+    dispatch({
+      type: "change",
+      task,
+    });
   };
 
   return (
