@@ -29,7 +29,7 @@ export default function TodoApp() {
   const handleDelete = (taskId) => {
     setTasks(tasks.filter((task) => taskId !== task.id));
   };
-  
+
   const handleChangeTask = (task) => {
     setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
   };
